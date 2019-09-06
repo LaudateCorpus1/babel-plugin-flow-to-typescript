@@ -1,4 +1,4 @@
-import { BaseNode } from '@babel/types';
+import { BaseNode } from '../types';
 
 export function recastProps(node: BaseNode): Partial<Omit<BaseNode, 'type'>> {
   return {

@@ -52,6 +52,7 @@ export function convertDeclareClass(node: DeclareClass) {
       );
       // todo: fix bug in tsDeclareMethod builder to accept member expression
       converted.key = key;
+      // @ts-ignore
       converted.static = property.static;
       // @ts-ignore
       converted.kind = property.kind;
@@ -59,6 +60,7 @@ export function convertDeclareClass(node: DeclareClass) {
       bodyElements.push(converted);
     } else if (property.kind === 'init') {
       const converted = classProperty(key, null, tsTypeAnnotation(convertedProperty));
+      // @ts-ignore
       converted.static = property.static;
       converted.readonly = property.variance && property.variance.kind === 'plus';
       converted.computed = isComputed;
