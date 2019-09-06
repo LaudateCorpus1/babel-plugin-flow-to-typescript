@@ -23,11 +23,29 @@ pluginTester({
 }`,
     },
     {
+      title: 'interface decl extend qualified',
+      code: `interface Something<A> extends Yet.Another {
+  something: string;
+}`,
+      output: `interface Something<A> extends Yet.Another {
+  something: string;
+}`,
+    },
+    {
       title: 'interface decl extend params',
       code: `interface Something<A> extends Another<A, B> {
   something: string;
 }`,
       output: `interface Something<A> extends Another<A, B> {
+  something: string;
+}`,
+    },
+    {
+      title: 'interface decl extend qualified params',
+      code: `interface Something<A> extends Yet.Another<A, B> {
+  something: string;
+}`,
+      output: `interface Something<A> extends Yet.Another<A, B> {
   something: string;
 }`,
     },
