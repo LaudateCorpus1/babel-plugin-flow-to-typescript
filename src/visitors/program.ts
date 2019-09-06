@@ -1,16 +1,16 @@
-import { Flow, isIdentifier, Program, TSTypeReference } from '@babel/types';
+import { Flow, isIdentifier, Program, TSTypeReference, Comment } from '@babel/types';
 import { NodePath, Node } from '@babel/traverse';
 import helperTypes from '../helper_types';
 import { warnOnlyOnce } from '../util';
+
+const isCommentFlowPragma = (comment: Comment) => ['@flow', '@flow strict'].includes(comment.value.trim());
 
 export default {
   enter(path: NodePath<Program>) {
     const [firstNode] = path.node.body;
 
     if (firstNode && firstNode.leadingComments && firstNode.leadingComments.length) {
-      const commentIndex = firstNode.leadingComments.findIndex(
-        item => item.value.trim() === '@flow',
-      );
+      const commentIndex = firstNode.leadingComments.findIndex(isCommentFlowPragma);
       if (commentIndex !== -1) {
         (path.get(`body.0.leadingComments.${commentIndex}`) as NodePath<Node>).remove();
       }
@@ -18,7 +18,7 @@ export default {
     // @ts-ignore recast support
     if (firstNode && firstNode.comments && firstNode.comments.length) {
       // @ts-ignore recast support
-      const commentIndex = firstNode.comments.findIndex(item => item.value.trim() === '@flow');
+      const commentIndex = firstNode.comments.findIndex(isCommentFlowPragma);
       if (commentIndex !== -1) {
         // @ts-ignore recast support
         firstNode.comments.splice(commentIndex, 1);

@@ -15,6 +15,16 @@ pluginTester({
       output: `const a = 55;\nexport default a;`,
     },
     {
+      title: 'program flow strict comment single line',
+      code: `// @flow strict\nconst a = 55;\nexport default a;`,
+      output: `const a = 55;\nexport default a;`,
+    },
+    {
+      title: 'program flow comment block statement',
+      code: `/* @flow strict */\nconst a = 55;\nexport default a;`,
+      output: `const a = 55;\nexport default a;`,
+    },
+    {
       title: 'program flow comment with license',
       code: `// @license MIT\n/* @flow */\nconst a = 55;\nexport default a;`,
       output: `// @license MIT\nconst a = 55;\nexport default a;`,
