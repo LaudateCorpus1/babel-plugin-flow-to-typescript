@@ -65,6 +65,9 @@ export default (_babel: any, opts: PluginOptions = {} as PluginOptions) => {
   }
   return {
     name: 'babel-plugin-flow-to-typescript',
+    pre() {
+      this.typeofImports = new Set();
+    },
     visitor,
 
     // tslint:disable-next-line:no-any

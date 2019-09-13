@@ -1,7 +1,9 @@
-import { Flow, isIdentifier, Program, TSTypeReference, Comment } from '@babel/types';
+import { Flow, isIdentifier, Program, TSTypeReference, Comment, tsTypeOperator, isTSTypeOperator } from '@babel/types';
 import { NodePath, Node } from '@babel/traverse';
 import helperTypes from '../helper_types';
+import { PluginPass } from '../types';
 import { warnOnlyOnce } from '../util';
+import { replaceWith } from '../utils/replaceWith';
 
 const isCommentFlowPragma = (comment: Comment) => ['@flow', '@flow strict'].includes(comment.value.trim());
 
@@ -25,7 +27,7 @@ export default {
       }
     }
   },
-  exit(path: NodePath<Program>) {
+  exit(this: PluginPass, path: NodePath<Program>) {
     path.traverse({
       /* istanbul ignore next */
       Flow(path: NodePath<Flow>) {
@@ -34,6 +36,7 @@ export default {
     });
 
     const usedHelperTypes = new Set<keyof typeof helperTypes>();
+    const {typeofImports} = this;
     path.traverse({
       TSTypeReference(typeReferencePath: NodePath<TSTypeReference>) {
         const node = typeReferencePath.node;
@@ -64,11 +67,15 @@ export default {
                 );
               }
             }
-          } else {
-            // @ts-ignore
-            if (helperTypes[name]) {
-              // @ts-ignore
-              usedHelperTypes.add(name);
+          } else if (name in helperTypes) {
+            usedHelperTypes.add(name as keyof typeof helperTypes);
+          } else if (typeofImports.has(name)) {
+            const parent = typeReferencePath.parent;
+            const isParentTypeof = isTSTypeOperator(parent) && parent.operator === 'typeof';
+            if (!isParentTypeof) {
+              const typeOp = tsTypeOperator(node);
+              typeOp.operator = 'typeof';
+              replaceWith(typeReferencePath, typeOp);
             }
           }
         }

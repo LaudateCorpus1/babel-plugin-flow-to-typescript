@@ -6,6 +6,7 @@ export interface PluginOptions {
 }
 
 export interface PluginPass extends BabelPluginPass<PluginOptions> {
+  typeofImports: Set<string>;
   set(key: 'isModuleDeclaration', value: boolean): void;
   get(key: 'isModuleDeclaration'): boolean;
 }
