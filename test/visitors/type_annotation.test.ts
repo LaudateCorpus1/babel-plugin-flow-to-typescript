@@ -123,6 +123,11 @@ pluginTester({
       output: `let a: T[k];`,
     },
     {
+      title: 'Utility generics: $NonMaybeType',
+      code: `let a: $NonMaybeType<T>;`,
+      output: `let a: NonNullable<T>;`,
+    },
+    {
       title: 'Utility generics: $Shape',
       code: `let a: $Shape<X>;`,
       output: `let a: Partial<X>;`,

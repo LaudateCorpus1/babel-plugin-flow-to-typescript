@@ -175,6 +175,9 @@ export function convertFlowType(node: FlowType): TSType {
       // $ElementType<T, k> -> T[k]
       const [tsT, tsK] = tsTypeParameters!.params;
       return tsIndexedAccessType(tsT, tsK);
+    } else if (isIdentifier(id) && id.name === '$NonMaybeType') {
+      // $NonMaybeType<T> -> NonNullable<T>
+      return tsTypeReference(identifier('NonNullable'), tsTypeParameters);
     } else if (isIdentifier(id) && id.name === '$Shape') {
       // $Shape<T> -> Partial<T>
       return tsTypeReference(identifier('Partial'), tsTypeParameters);
